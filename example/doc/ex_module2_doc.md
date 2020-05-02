@@ -9,8 +9,6 @@
 ### Parameter list  
 |**Name**|**Default Value**|**Description**|  
 |-|-|-|  
-|param1|23|Example param1 description|  
-|param2|32|Example param2 description|  
       
 ### Input list  
 |**Name**|**Width**|**Description**|  
@@ -40,10 +38,7 @@
       
 ### Instantiation example 
  ```verilog   
-ex_module2 #(  
-.param1(23),  
-.param2(32)
-)ex_module2_inst0(  
+ex_module2 ex_module2_inst0(  
 .clk(),  
 .rst(),  
 .data_in(),  

@@ -6,10 +6,7 @@
   Revision: 1.0 Module created.
 **/
 
-module ex_module2 #(
-  parameter param1 = 23, /* Example param1 description */
-  parameter param2 = 32 /* Example param2 description */
-  )(
+module ex_module2 (
   input clk, /* Example clk input */
   input rst, /* Example rst input */
 
