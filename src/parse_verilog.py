@@ -1,6 +1,39 @@
 import re
 
 
+def parse_command(line, command=None):
+
+    line = line.replace('/*', 'COMMENTINI').replace('*/', 'COMMENTEND')
+    line = line.strip() + 'COMMENTINI COMMENTEND' if 'COMMENTINI' not in line else line
+    excludes = ["reg", "signed"]
+    for exclude in excludes:
+        if len(line.strip().split()) > 1:
+            if line.strip().split()[1] == exclude:
+                line = line.replace(exclude + ' ', '', 1)
+    param1 = None
+    param2 = None
+    param3 = None
+
+    if command == 'parameter':
+        find_params = re.findall('\w* (.*) = (.*)COMMENTINI(.*)COMMENTEND', line)[0]
+        param1 = find_params[0].strip()
+        param2 = find_params[1].replace(',', '').strip()
+        param3 = find_params[2].strip()
+    elif command != 'module':
+        if '[' not in line.split()[1]:
+            find_params = re.findall('\w* (.*)COMMENTINI(.*)COMMENTEND', line)[0]
+            param1 = find_params[0].replace(',', '').replace(';', '').strip()
+            param2 = '[0:0]'
+        else:
+            find_params = re.findall('\w* (\[.*\]) (.*)COMMENTINI(.*)COMMENTEND', line)[0]
+            param1_aux = find_params[1].strip().replace(',', '').replace(';', '').split(' ')
+            param1 = param1_aux[0]
+            param2 = find_params[0].strip() if len(param1_aux) == 1 else str(find_params[0].strip()) + str(param1_aux[1])
+
+        param3 = find_params[-1].strip()
+    return param1, param2, param3
+
+
 def parse_verilog (file_name, wireandregs):
     file_v = open(file_name, 'r')
 
@@ -40,75 +73,32 @@ def parse_verilog (file_name, wireandregs):
 
         if header_end:
             check_command = line.strip().split(' ')[0]
-            line = line.replace('/*', 'COMMENTINI').replace('*/', 'COMMENTEND')
-            line = line.strip() + 'COMMENTINI COMMENTEND' if 'COMMENTINI' not in line else line
-            excludes = ["reg", "signed"]
-            for exclude in excludes:
-                if len(line.strip().split()) > 1:
-                    if line.strip().split()[1] == exclude:
-                        line = line.replace(exclude + ' ', '', 1)
+            line = line.strip()
 
             if check_command == 'module':
                 module_name = line.split()[1]
 
             if check_command == 'parameter':
-                find_params = re.findall('.*parameter (.*) = (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                param1 = find_params[0].strip()
-                param2 = find_params[1].replace(',', '').strip()
-                param3 = find_params[2].strip()
+                [param1, param2, param3] = parse_command(line, check_command)
                 table_params += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 param_detect += '.{}({}),  \n'.format(param1, param2)
 
             if check_command == 'input':
-                if 'input [' not in line:
-                    find_params = re.findall('.*input (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[0].replace(',', '').strip()
-                    param2 = '[0:0]'
-                else:
-                    find_params = re.findall('.*input (\[.*\]) (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[1].replace(',', '').strip()
-                    param2 = find_params[0].strip()
-                param3 = find_params[-1].strip()
+                [param1, param2, param3] = parse_command(line, check_command)
                 table_inputs += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 module_inst += '.{}(),  \n'.format(param1)
 
             if check_command == 'output':
-                if 'output [' not in line:
-                    find_params = re.findall('.*output (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[0].replace(',', '').strip()
-                    param2 = '[0:0]'
-                else:
-                    find_params = re.findall('.*output (\[.*\]) (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[1].replace(',', '').strip()
-                    param2 = find_params[0].strip()
-                param3 = find_params[-1].strip()
+                [param1, param2, param3] = parse_command(line, check_command)
                 table_outputs += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 module_inst += '.{}(),  \n'.format(param1)
 
             if check_command == 'wire':
-                if 'wire [' not in line:
-                    find_params = re.findall('.*wire (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[0].replace(';', '').strip()
-                    param2 = '[0:0]'
-                else:
-                    find_params = re.findall('.*wire (\[.*\]) (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1_aux = find_params[1].strip().replace(';', '').split(' ')
-                    param1 = param1_aux[0]
-                    param2 = find_params[0].strip() if len(param1_aux) == 1 else str(find_params[0].strip()) + str(param1_aux[1])
-                param3 = find_params[-1].strip()
+                [param1, param2, param3] = parse_command(line, check_command)
                 table_wire += "|{}|{}|{}|  \n".format(param1, param2, param3)
 
             if check_command == 'reg':
-                if 'reg [' not in line:
-                    find_params = re.findall('.*reg (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1 = find_params[0].replace(';', '').strip()
-                    param2 = '[0:0]'
-                else:
-                    find_params = re.findall('.*reg (\[.*\]) (.*)COMMENTINI(.*)COMMENTEND', line)[0]
-                    param1_aux = find_params[1].strip().replace(';', '').split(' ')
-                    param1 = param1_aux[0]
-                    param2 = find_params[0].strip() if len(param1_aux) == 1 else str(find_params[0].strip()) + str(param1_aux[1])
-                param3 = find_params[-1].strip()
+                [param1, param2, param3] = parse_command(line, check_command)
                 table_reg += "|{}|{}|{}|  \n".format(param1, param2, param3)
 
     if param_detect == '':
