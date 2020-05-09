@@ -1,6 +1,5 @@
 from parse_verilog import parse_verilog
 import sys
-import os
 
 if len(sys.argv) < 2:
     print("Err1: Function needs a config file")
@@ -10,7 +9,7 @@ config_file_name = sys.argv[1]
 
 print("Config file selected: " + config_file_name)
 
-## Read configuration file
+# Read configuration file
 wireandreg_flag = False
 onefile_flag = False
 outputdir = ""
@@ -38,6 +37,6 @@ for file_name in file_list:
     module_name, doc_string = parse_verilog(file_name, True)
     file_doc_name = outputdir + module_name + "_doc.md"
 
-    file_md = open(file_doc_name,"wt")
+    file_md = open(file_doc_name, "wt")
     file_md.write(doc_string)
     file_md.close()
