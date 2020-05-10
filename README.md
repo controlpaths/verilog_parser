@@ -64,4 +64,4 @@ python3 ./generate_docu.py ../example/hdl/docu_config.cnfg
 
 ### Credits.
 ***Pablo Trujillo** (FPGA developer)  
-***Sara Martínez** (Python developer and QA analist)
+***Sara Martínez** (Python developer and QA analyst)
