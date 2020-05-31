@@ -1,4 +1,5 @@
 file ../example/hdl/ex_module1.v
 file ../example/hdl/ex_module2.v
+file ../example/hdl/ex_module3.v
 
 outputdir ../example/doc/

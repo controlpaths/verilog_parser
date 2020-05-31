@@ -21,7 +21,7 @@
 ### Output list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
-|data_valid|[0:0]|Example output data|  
+|data_valid|[0:0]|Example output reg data|  
 |data_out|[31:0]|Example vector data out signed|  
       
 ### Wire list  
@@ -36,6 +36,8 @@
 |r_example|[0:0]|Register example|  
 |r32_example|[31:0]|Reg vector example|  
       
+### Code notes  
+      
 ### Instantiation example 
  ```verilog   
 ex_module2 ex_module2_inst0(  
@@ -47,3 +49,5 @@ ex_module2 ex_module2_inst0(
 .data_out()   
 );   
 ```
+      
+Automatic documentation generator. (https://github.com/controlpaths/verilog_parser)

@@ -1,16 +1,14 @@
-#  ex_module1
+#  ex_module3
  --- 
- **File:** ../example/hdl/ex_module1.v  
-**Module name**\: ex_module1  
+ **File:** ../example/hdl/ex_module3.v  
+**Module name**\: ex_module2  
 **Author**\: P Trujillo (pablo@controlpaths.com\)  
 **Date**\: Dec 2019  
-**Description**\: Module example with parameters.  
+**Description**\: Module example with code notes.  
 **Revision**\: 1.0 Module created.  
 ### Parameter list  
 |**Name**|**Default Value**|**Description**|  
 |-|-|-|  
-|param1|23|Example param1 description|  
-|param2|32|Example param2 description|  
       
 ### Input list  
 |**Name**|**Width**|**Description**|  
@@ -39,13 +37,14 @@
 |r32_example|[31:0]|Reg vector example|  
       
 ### Code notes  
+#### Example
+***This is*** an example of code notes.
+- list1
+- list2
       
 ### Instantiation example 
  ```verilog   
-ex_module1 #(  
-.param1(23),  
-.param2(32)
-)ex_module1_inst0(  
+ex_module3 ex_module3_inst0(  
 .clk(),  
 .rst(),  
 .data_in(),  

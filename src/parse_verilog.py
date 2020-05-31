@@ -42,7 +42,9 @@ def parse_verilog (file_name, wireandregs):
       \n### Output list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
       \n### Wire list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
       \n### Register list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Instantiation example \n {}'
+      \n### Code notes  \n{}\
+      \n### Instantiation example \n {}\n\
+      \nAutomatic documentation generator. (https://github.com/controlpaths/verilog_parser)'
 
     header = ''
     header_start = False
@@ -53,6 +55,8 @@ def parse_verilog (file_name, wireandregs):
     table_outputs = ''
     table_wire = ''
     table_reg = ''
+    code_notes = ''
+    code_notes_active = False
     module_name = ''
 
     param_detect = ''
@@ -75,29 +79,40 @@ def parse_verilog (file_name, wireandregs):
             check_command = line.strip().split(' ')[0]
             line = line.strip()
 
-            if check_command == 'module':
+            if check_command == '/md::':
+                code_notes_active = False
+
+            if code_notes_active == True:
+                code_notes += line
+                code_notes += '\n'
+
+            if check_command == 'md::':
+                code_notes_active = True
+
+
+            if check_command == 'module' and code_notes_active == False:
                 module_name = line.split()[1]
 
-            if check_command == 'parameter':
+            if check_command == 'parameter' and code_notes_active == False:
                 [param1, param2, param3] = parse_command(line, check_command)
                 table_params += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 param_detect += '.{}({}),  \n'.format(param1, param2)
 
-            if check_command == 'input':
+            if check_command == 'input' and code_notes_active == False:
                 [param1, param2, param3] = parse_command(line, check_command)
                 table_inputs += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 module_inst += '.{}(),  \n'.format(param1)
 
-            if check_command == 'output':
+            if check_command == 'output' and code_notes_active == False:
                 [param1, param2, param3] = parse_command(line, check_command)
                 table_outputs += "|{}|{}|{}|  \n".format(param1, param2, param3)
                 module_inst += '.{}(),  \n'.format(param1)
 
-            if check_command == 'wire':
+            if check_command == 'wire' and code_notes_active == False:
                 [param1, param2, param3] = parse_command(line, check_command)
                 table_wire += "|{}|{}|{}|  \n".format(param1, param2, param3)
 
-            if check_command == 'reg':
+            if check_command == 'reg' and code_notes_active == False:
                 [param1, param2, param3] = parse_command(line, check_command)
                 table_reg += "|{}|{}|{}|  \n".format(param1, param2, param3)
 
@@ -106,5 +121,5 @@ def parse_verilog (file_name, wireandregs):
     else:
         module_inst_v = "```verilog   \n{} #(  \n{}\n){}_inst0(  \n{}   \n);   \n```".format(module_name, param_detect[:-4], module_name, module_inst[:-4])
 
-    output_string = template.format(module_name, file_name, header, table_params, table_inputs, table_outputs, table_wire, table_reg, module_inst_v)
+    output_string = template.format(module_name, file_name, header, table_params, table_inputs, table_outputs, table_wire, table_reg, code_notes, module_inst_v)
     return module_name, output_string
