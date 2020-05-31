@@ -1,5 +1,16 @@
+![image](./example/doc/logo.png)
 ## Verilog automatic documentation modules.
 
+### Version history
+- ***v1.0***  
+First version.  
+- ***v2.0***  
+Code refactor.  
+Added *wireandreg* command to config file.  
+Added *logo* command
+Added function *code notes*.
+
+### Description
 This parser can be used to document all verilog files of one project. The output documentation uses **Markdown** (.md) as documentation language. IN examples directory can found a documentation example of 2 example modules.
 
 ### Coding instructions.
@@ -18,6 +29,19 @@ Header
 - parameter word has to be found in each line where parameter found.
 - input word has to be found in each line where input found.
 - output word has to be found in each line where output found.
+
+#### Code notes
+Parser gives the developer the possibility of describe code parts. This documentation must to be write in markdown format, since this text will be added directly to documentation. Verilog parser do not check the syntax of this markdown code.  
+##### Structure
+```
+/*
+md::
+
+Text in markdown format
+
+/md::
+*/
+```
 
 ### Verilog structures supported.
 - module declaration.
@@ -51,6 +75,9 @@ file ../example/hdl/cen_generator_v1_0.v
 ```
 outputdir ../example/doc
 ```
+- **wireandreg**: When this instruction is present in config file, wires and registers are added to documentation. Otherwise wires and registers are no added.
+- **logo**: This instruction is used to use a logo on all markdown documents. Instruction must be followed by the path to logo from the markdown output file, since this file is who has to read it.
+
 ### Calling parser from terminal.
 Parser is designed to be called from terminal. Call need one argument for set the configuration file path. This argument is mandatory, and the script will repor a error (Err1: Function needs a config file) if this argument is missing.
 ```
@@ -58,9 +85,8 @@ python3 ./generate_docu.py ../example/hdl/docu_config.cnfg
 ```
 ### To Do.
 - Identify module dependencies.
-- Documentation of code parts.
 - Integration with Sphinx.
-- Integrate logo on documentation.
+- Use regular expresions for select files.
 
 ### Credits.
 ***Pablo Trujillo** (FPGA developer)  

@@ -1,6 +1,5 @@
 import re
 
-
 def parse_command(line, command=None):
 
     line = line.replace('/*', 'COMMENTINI').replace('*/', 'COMMENTEND')
@@ -37,14 +36,15 @@ def parse_command(line, command=None):
 def parse_verilog (file_name, wireandregs):
     file_v = open(file_name, 'r')
 
-    template = '#  {}\n --- \n **File:** {}  \n{}### Parameter list  \n|**Name**|**Default Value**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Input list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Output list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Wire list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Register list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}\
-      \n### Code notes  \n{}\
-      \n### Instantiation example \n {}\n\
-      \nAutomatic documentation generator. (https://github.com/controlpaths/verilog_parser)'
+    template_header = '#  {}\n --- \n **File:** {}  \n{}'
+    template_parameters = '### Parameter list  \n|**Name**|**Default Value**|**Description**|  \n|-|-|-|  \n{}'
+    template_input = '\n### Input list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
+    template_output = '\n### Output list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
+    template_wire = '\n### Wire list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
+    template_register = '\n### Register list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
+    template_codenotes = '\n### Code notes  \n{}'
+    template_instantiation = '\n### Instantiation example \n {}\n'
+    credits = '\nAutomatic documentation generator. (https://github.com/controlpaths/verilog_parser)'
 
     header = ''
     header_start = False
@@ -121,5 +121,28 @@ def parse_verilog (file_name, wireandregs):
     else:
         module_inst_v = "```verilog   \n{} #(  \n{}\n){}_inst0(  \n{}   \n);   \n```".format(module_name, param_detect[:-4], module_name, module_inst[:-4])
 
-    output_string = template.format(module_name, file_name, header, table_params, table_inputs, table_outputs, table_wire, table_reg, code_notes, module_inst_v)
+    output_string = template_header.format(module_name, file_name, header)
+
+    if table_params != '':
+        output_string += template_parameters.format(table_params)
+
+    if table_inputs != '':
+        output_string += template_input.format(table_inputs)
+
+    if table_outputs != '':
+        output_string += template_output.format(table_outputs)
+
+    if table_wire != '' and wireandregs == True:
+        output_string += template_wire.format(table_wire)
+
+    if table_reg != '' and wireandregs == True:
+        output_string += template_register.format(table_reg)
+
+    if code_notes != '':
+        output_string += template_codenotes.format(code_notes)
+
+    output_string += template_instantiation.format(module_inst_v)
+    output_string += credits
+
+    #output_string = template.format(module_name, file_name, header, table_params, table_inputs, table_outputs, table_wire, table_reg, code_notes, module_inst_v)
     return module_name, output_string

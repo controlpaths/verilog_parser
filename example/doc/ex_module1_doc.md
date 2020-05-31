@@ -1,3 +1,4 @@
+![image](logo.png)
 #  ex_module1
  --- 
  **File:** ../example/hdl/ex_module1.v  
@@ -11,7 +12,7 @@
 |-|-|-|  
 |param1|23|Example param1 description|  
 |param2|32|Example param2 description|  
-      
+
 ### Input list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -19,27 +20,25 @@
 |rst|[0:0]|Example rst input|  
 |data_in|[31:0]|Example vector data input|  
 |ce|[0:0]|Example data input|  
-      
+
 ### Output list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
 |data_valid|[0:0]|Example output reg data|  
 |data_out|[31:0]|Example vector data out signed|  
-      
+
 ### Wire list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
 |w_example|[0:0]|Wire example|  
 |ws32_example|[31:0]|Wire signed vector example|  
-      
+
 ### Register list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
 |r_example|[0:0]|Register example|  
 |r32_example|[31:0]|Reg vector example|  
-      
-### Code notes  
-      
+
 ### Instantiation example 
  ```verilog   
 ex_module1 #(  
@@ -54,5 +53,5 @@ ex_module1 #(
 .data_out()   
 );   
 ```
-      
+
 Automatic documentation generator. (https://github.com/controlpaths/verilog_parser)
