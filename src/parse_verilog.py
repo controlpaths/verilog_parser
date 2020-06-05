@@ -36,7 +36,7 @@ def parse_command(line, command=None):
 def parse_verilog (file_name, wireandregs):
     file_v = open(file_name, 'r')
 
-    template_header = '#  {}\n --- \n **File:** {}  \n{}'
+    template_header = '#  {} \n **File:** {}  \n{}'
     template_parameters = '### Parameter list  \n|**Name**|**Default Value**|**Description**|  \n|-|-|-|  \n{}'
     template_input = '\n### Input list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
     template_output = '\n### Output list  \n|**Name**|**Width**|**Description**|  \n|-|-|-|  \n{}'
